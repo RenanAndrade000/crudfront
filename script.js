@@ -35,11 +35,11 @@ function getLista() {
         const newRow = document.createElement("tr");
 
         newRow.innerHTML = `<th scope='row'>${funcionario.id}</th>
-          <td contenteditable='true'>${funcionario.nome}</td>
-          <td contenteditable='true'>${funcionario.cep}</td>
-          <td contenteditable='true'>${funcionario.endereco}</td>
-          <td contenteditable='true'>${funcionario.data}</td>
-          <td contenteditable='true'>${funcionario.salario}</td>
+          <td contenteditable='false'>${funcionario.nome}</td>
+          <td contenteditable='false'>${funcionario.cep}</td>
+          <td contenteditable='false'>${funcionario.endereco}</td>
+          <td contenteditable='false'>${funcionario.data}</td>
+          <td contenteditable='false'>${funcionario.salario}</td>
           <td><button type='button' class='btn btn-info fas fa-edit'></button></td>
           <td><button type='button' class='btn btn-danger fas fa-trash'></button></td>`;
 
@@ -63,11 +63,28 @@ function getLista() {
 
         const editButton = newRow.querySelector('.btn-info');
         editButton.addEventListener('click', () => {
-          editButton.classList.remove('fa-edit');
-          editButton.classList.add('fa-check');
-          
-          if (editButton.innerText === "Salvar") {
+        const tdElements = newRow.querySelectorAll('td')
+        tdElements.forEach(td =>{
+          td.contentEditable = true;
+        })
+        
 
+          if(editButton.classList.contains("fa-edit")){
+            editButton.classList.remove('fa-edit');
+            editButton.classList.add('fa-check');
+            editButton.classList.remove('btn-info')
+            editButton.classList.add('btn-success');
+          }else{
+            editButton.classList.remove('fa-check');
+            editButton.classList.add('fa-edit');
+            editButton.classList.remove('btn-success');
+            editButton.classList.add('btn-info')
+            tdElements.forEach(td =>{
+              td.contentEditable = false;
+            })
+
+          }
+          
             const updatedFuncionario = {
               id: funcionario.id,
               nome: newRow.querySelector('td:nth-child(2)').textContent,
@@ -76,7 +93,6 @@ function getLista() {
               data: newRow.querySelector('td:nth-child(5)').textContent,
               salario: newRow.querySelector('td:nth-child(6)').textContent,
             };
-
             fetch(`http://localhost:8080/update/${updatedFuncionario.id}`, {
               method: 'PUT',
               headers: {
@@ -88,14 +104,12 @@ function getLista() {
                 if (!response.ok) {
                   throw new Error('Não foi possível atualizar o registro');
                 }
-                editButton.innerText = "Editar";
               })
               .catch(error => {
                 console.error('Erro ao atualizar: ' + error);
               });
-          } else {
-            editButton.innerText = "Salvar";
-          }
+
+      
         });
 
         tabela.appendChild(newRow);
