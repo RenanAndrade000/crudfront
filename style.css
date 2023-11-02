@@ -1,0 +1,19 @@
+body{
+    background-color: #212529;
+}
+label{
+    color: white;
+}
+
+.row{
+    width: 40%;
+    padding: 4rem;
+}
+
+nav-item{
+    padding-right: 50%;
+}
+
+.table{
+    top:5rem
+}
